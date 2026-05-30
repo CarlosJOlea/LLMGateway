@@ -34,4 +34,17 @@ public class CreateChatSessionAdapter  implements ChatSessionRepositoryPort{
                 .map(chatSessionMapper::toModel);
     }
 
+    @Override
+    public List<ChatSessionModel> findByUserId(UUID userId) {
+        return chatSessionRepository.findByUserIdOrderByUpdatedAtDesc(userId)
+                .stream()
+                .map(chatSessionMapper::toModel)
+                .toList();
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        chatSessionRepository.deleteById(id);
+    }
+
 }
