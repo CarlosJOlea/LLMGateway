@@ -6,6 +6,7 @@ import com.fragua.LLMGateway.structure.ollama.infrastructure.adapter.output.clie
 import com.fragua.LLMGateway.structure.ollama.infrastructure.adapter.output.request.OllamaChatRequest;
 import com.fragua.LLMGateway.structure.ollama.infrastructure.adapter.output.request.OllamaMessageRequest;
 import com.fragua.LLMGateway.structure.ollama.infrastructure.adapter.output.response.OllamaChatResponse;
+import com.fragua.LLMGateway.structure.ollama.infrastructure.adapter.output.response.OllamaTagsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -30,5 +31,13 @@ public class OllamaAdapter implements ChatModelPort {
         OllamaChatRequest request = new OllamaChatRequest(model, ollamaMessages, false);
         OllamaChatResponse response = ollamaClient.chat(request);
         return response.message().content();
+    }
+
+    @Override
+    public List<String> listAvailableModels() {
+        OllamaTagsResponse response = ollamaClient.listModels();
+        return response.models().stream()
+                .map(model -> model.name())
+                .toList();
     }
 }

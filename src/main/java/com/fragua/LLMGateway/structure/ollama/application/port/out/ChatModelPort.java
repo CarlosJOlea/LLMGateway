@@ -8,4 +8,6 @@ public interface ChatModelPort {
 
     String chat(String model, List<MessageModel> messages);
 
+    List<String> listAvailableModels();
+
 }
