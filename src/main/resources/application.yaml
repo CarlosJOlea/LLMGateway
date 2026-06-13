@@ -3,23 +3,49 @@ spring:
     name: LLMGateway
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/mydatabase
-    username: postgres
-    password: postgres
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/mydatabase}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    show-sql: true
+      # El esquema lo gestiona Flyway (db/migration); Hibernate solo valida
+      ddl-auto: validate
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
 
+  cloud:
+    openfeign:
+      client:
+        config:
+          ollama-client:
+            connect-timeout: 5000
+            # Las generaciones largas de Ollama pueden tardar varios minutos
+            read-timeout: 300000
+
 jwt:
-  secret: my-super-secret-key-my-super-secret-key
+  secret: ${JWT_SECRET:my-super-secret-key-my-super-secret-key}
   access-expiration: 3600000
   refresh-expiration: 604800000
 
 ollama:
-  url: http://localhost:11434
+  url: ${OLLAMA_URL:http://localhost:11434}
+  read-timeout-seconds: 600
+
+gateway:
+  rate-limit:
+    enabled: true
+    requests-per-minute: 60
+  context:
+    # Limite de contexto asumido para modelos que no esten en model-limits
+    default-max-tokens: 4096
+    # Tokens reservados para la respuesta del modelo
+    response-reserve: 1024
+    # Limites por modelo, ej.:
+    # model-limits:
+    #   llama3.1: 131072
+    #   qwen2.5-coder: 32768
+    model-limits: {}

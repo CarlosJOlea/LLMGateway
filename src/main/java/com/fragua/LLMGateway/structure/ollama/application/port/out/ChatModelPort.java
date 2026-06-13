@@ -6,8 +6,14 @@ import java.util.List;
 
 public interface ChatModelPort {
 
-    String chat(String model, List<MessageModel> messages);
+    ChatResult chat(String model, List<MessageModel> messages);
 
     List<String> listAvailableModels();
 
+    record ChatResult(
+            String content,
+            Integer promptTokens,
+            Integer completionTokens
+    ) {
+    }
 }

@@ -5,5 +5,5 @@ import com.fragua.LLMGateway.structure.chatsession.domain.model.ChatSessionModel
 import java.util.UUID;
 
 public interface GetChatSessionUseCase {
-    ChatSessionModel getById(UUID chatSessionId);
+    ChatSessionModel getById(UUID userId, UUID chatSessionId);
 }

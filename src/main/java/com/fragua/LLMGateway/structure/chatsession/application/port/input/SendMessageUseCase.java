@@ -6,5 +6,5 @@ import com.fragua.LLMGateway.structure.chatsession.infrastructure.adapter.input.
 import java.util.UUID;
 
 public interface SendMessageUseCase {
-    ChatResponse send(UUID chatSessionId, SendMessageRequest request);
+    ChatResponse send(UUID userId, UUID chatSessionId, SendMessageRequest request);
 }

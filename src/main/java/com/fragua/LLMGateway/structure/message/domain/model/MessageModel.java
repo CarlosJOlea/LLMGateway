@@ -43,6 +43,21 @@ public class MessageModel {
                 .build();
     }
 
+    public static MessageModel system(
+            String content,
+            Integer messageOrder,
+            UUID chatSessionId
+    ) {
+
+        return MessageModel.builder()
+                .chatSessionId(chatSessionId)
+                .role(MessageRole.SYSTEM)
+                .content(content)
+                .messageOrder(messageOrder)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
+
     public static MessageModel assistant(
             String content,
             Integer promptTokens,

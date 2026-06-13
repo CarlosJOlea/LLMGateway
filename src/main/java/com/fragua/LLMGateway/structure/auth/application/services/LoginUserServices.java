@@ -8,6 +8,7 @@ import com.fragua.LLMGateway.structure.auth.application.port.output.PasswordEnco
 import com.fragua.LLMGateway.structure.auth.application.port.output.RefreshTokenRepositoryPort;
 import com.fragua.LLMGateway.structure.auth.infrastructure.input.request.LoginRequest;
 import com.fragua.LLMGateway.structure.auth.infrastructure.input.response.AuthResponse;
+import com.fragua.LLMGateway.structure.shared.exception.UnauthorizedException;
 import com.fragua.LLMGateway.structure.user.aplication.port.output.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,12 +32,12 @@ public class LoginUserServices implements LoginUserUseCase {
         UserModel user = userRepositoryPort
                 .findByEmail(request.email())
                 .orElseThrow(() ->
-                        new RuntimeException("Invalid credentials"));
+                        new UnauthorizedException("Invalid credentials"));
 
         boolean passwordMatches = passwordEncoderPort.matches(request.password(), user.getPasswordHash());
 
         if (!passwordMatches) {
-            throw new RuntimeException("Invalid credentials");
+            throw new UnauthorizedException("Invalid credentials");
         }
 
         String accessToken = jwtPort.generateAccessToken(user);

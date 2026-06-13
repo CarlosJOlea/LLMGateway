@@ -19,7 +19,7 @@ public class OllamaAdapter implements ChatModelPort {
     private final OllamaClient ollamaClient;
 
     @Override
-    public String chat(String model, List<MessageModel> messages) {
+    public ChatResult chat(String model, List<MessageModel> messages) {
 
         List<OllamaMessageRequest> ollamaMessages = messages.stream()
                 .map(message -> new OllamaMessageRequest(
@@ -30,7 +30,12 @@ public class OllamaAdapter implements ChatModelPort {
 
         OllamaChatRequest request = new OllamaChatRequest(model, ollamaMessages, false);
         OllamaChatResponse response = ollamaClient.chat(request);
-        return response.message().content();
+
+        return new ChatResult(
+                response.message().content(),
+                response.promptEvalCount(),
+                response.evalCount()
+        );
     }
 
     @Override

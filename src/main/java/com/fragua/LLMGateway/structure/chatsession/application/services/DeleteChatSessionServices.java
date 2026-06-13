@@ -3,6 +3,7 @@ package com.fragua.LLMGateway.structure.chatsession.application.services;
 import com.fragua.LLMGateway.structure.chatsession.application.port.input.DeleteChatSessionUseCase;
 import com.fragua.LLMGateway.structure.chatsession.application.port.ouput.ChatSessionRepositoryPort;
 import com.fragua.LLMGateway.structure.chatsession.domain.model.ChatSessionModel;
+import com.fragua.LLMGateway.structure.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,10 @@ public class DeleteChatSessionServices implements DeleteChatSessionUseCase {
     @Override
     public void delete(UUID userId, UUID chatSessionId) {
         ChatSessionModel chatSession = chatSessionRepositoryPort.findById(chatSessionId)
-                .orElseThrow(() -> new RuntimeException("Chat session not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Chat session not found"));
 
         if (!chatSession.getUserId().equals(userId)) {
-            throw new RuntimeException("Chat session not found");
+            throw new ResourceNotFoundException("Chat session not found");
         }
 
         chatSessionRepositoryPort.deleteById(chatSessionId);

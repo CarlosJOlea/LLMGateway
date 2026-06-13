@@ -42,6 +42,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
 
+        if (token.startsWith("sk-")) {
+            // Es una API key, no un JWT; la maneja ApiKeyAuthenticationFilter
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (!jwtPort.isTokenValid(token)) {
             log.warn("Token JWT inválido o expirado para la URI: {}", path);
             filterChain.doFilter(request, response);
